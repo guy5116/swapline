@@ -1,0 +1,22 @@
+<DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset='UTF-8'>
+	<meta name='viewpoint' content='width-device-width, initial-scale=1.0'>
+	<title><%= title %></title>
+	<link rel='stylesheet' href='/css/style.css'>
+	</head>
+<body>
+	<nav>
+		<a href='/'>Home</a>
+		<% if (user) { %>
+			<a href='/dashboard'>Dashboard</a>
+			<form action='/logout' method='POST' class='inline'>
+				<button type='submit'>Log out</button>
+			</form>
+		<% } else { %>
+			<a href='/login'>Log in</a>
+			<a href='/register'>Register</a>
+		<% } %>
+	</nav>
+<main>

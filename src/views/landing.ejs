@@ -1,0 +1,9 @@
+<%- include('partials/header') %>
+<h1>Welcome</h1>
+<p>This is the landing page for Swap Line</p>
+<% if (user) { %>
+	<p>You're logged in as <strong><%=user.fname %> <%=user.lname%></strong>.</p>
+<% } else { %>
+	<p><a href='login'>Log in</a> to see your dashboard.</a>
+<% } %>
+<%- include('partials/footer') %>
