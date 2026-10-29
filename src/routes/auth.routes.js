@@ -36,8 +36,8 @@ router.post('/login', async (req,res,next) => {
 
 		req.session.regenerate((err) => {
 			if(err) return next(err);
-			req.session.user = { id: employee.id, fname: employee.fname, lname: employee.lname, manager: employee.manager};
-			res.redirect('/dashboard');
+			req.session.user = { id: employee.employee_id, fname: employee.fname, lname: employee.lname, manager: employee.manager};
+			res.redirect('/schedule');
 		});
 	} catch(err) {
 		next(err);
