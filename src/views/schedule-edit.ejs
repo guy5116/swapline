@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+
+<h1>Schedule</h1>
+<p>Hi <strong><%= user.fname %> <%= user.lname %>. </strong></p>
+<% if (dates) { %>
+	<% dates.forEach(function(date) { %>
+	<li>From <%=date.start %> to <%=date.end %></li>
+	<% }); %>
+<% } else { %>
+	<p>No Dates</p>
+<% } %>
+<%- include('partials/footer') %>

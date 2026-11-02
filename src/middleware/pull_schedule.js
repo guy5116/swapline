@@ -12,4 +12,19 @@ async function findScheduleByEmployeeID(id) {
 	}
 }
 
-module.exports = { findScheduleByEmployeeID };
+async function pullSchedule() {
+	const sql = 'SELECT * FROM schedule';
+	try {
+		const [rows] = await pool.execute(sql);
+		
+		return rows.length > 0 ? rows : null;
+	} catch (error) {
+		console.error('error fetching data');
+		throw error;
+	}
+}
+
+module.exports = { 
+	findScheduleByEmployeeID,
+	pullSchedule
+ };
