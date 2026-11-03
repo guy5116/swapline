@@ -5,8 +5,15 @@ Basic Startup:
 CREATE DATABASE swapline;
 ```
 
+>Create .env file
+```
+PORT=YOUR PORT
+SESSION_SERCRET=ENTER YOUR SECRET
+```
+
 >shell
 ```
+npm install express express-session ejs bcryptjs dotenv mysql2   
 npm run dev
 ```
 
@@ -16,11 +23,7 @@ express				dotenv
 express-sessions		ejs
 bcrypt				mysql2
 ```
->Create .env file
-```
-PORT=YOUR PORT
-SESSION_SERCRET=ENTER YOUR SECRET
-```
+
 
 
 Swap Line is a scheduling platform with the goals of
