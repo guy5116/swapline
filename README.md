@@ -1,6 +1,6 @@
 Basic Startup:
 
->mySQL
+>Make the mySQL Database
 ```
 CREATE DATABASE swapline;
 ```
@@ -10,14 +10,16 @@ CREATE DATABASE swapline;
 npm run dev
 ```
 
->requirements
+>Node Package requirements
 ```
-express
-express-sessions
-bcrypt
-dotenv
-ejs
-mysql2
+express				dotenv
+express-sessions	ejs
+bcrypt				mysql2
+```
+>Create .env file
+```
+PORT=YOUR PORT
+SESSION_SERCRET=ENTER YOUR SECRET
 ```
 
 
