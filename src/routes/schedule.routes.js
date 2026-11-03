@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const { findScheduleByEmployeeID, pullSchedule } = require('../middleware/pull_schedule');
+const { findScheduleByEmployeeID, pullSchedule, sqlDTtojs } = require('../middleware/pull_schedule');
 
 const pool = require('../data/db');
 const router = express.Router();
@@ -13,13 +13,13 @@ router.get('/schedule', async(req,res,next) => {
 	try{
 		const user = req.session.user ?? null;
 		const dates = await findScheduleByEmployeeID(user.id);
-		
-		//console.log('Current dates are:	', dates);
+
+		const order_schedule = await sqlDTtojs(dates)
 		
 		return res.render('schedule', { 
 						  title: 'Schedule',
 						  user: user, 
-						  dates: dates, 
+						  dates: order_schedule, 
 						  error: null
 						  });
 	} catch (error) {

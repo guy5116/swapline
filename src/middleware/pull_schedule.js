@@ -24,7 +24,31 @@ async function pullSchedule() {
 	}
 }
 
+async function sqlDTtojs(dates){
+	const sunday 	= [];		
+	const monday 	= [];		
+	const tuesday 	= [];		
+	const wednesday	= [];		
+	const thursday 	= [];		
+	const friday 	= [];		
+	const saturday	= [];		
+	
+	const starts = [sunday,monday,tuesday,wednesday,thursday,friday,saturday];
+
+	dates.sort((a,b) => new Date(a.start)- new Date(b.start));
+	
+	for (const date of dates){
+		const i = date.start.getDay();
+		starts[i].push(date);
+	}
+	
+	console.log('Starts are:	',starts)
+	
+	return starts;
+}
+
 module.exports = { 
 	findScheduleByEmployeeID,
-	pullSchedule
+	pullSchedule,
+	sqlDTtojs
  };
