@@ -13,7 +13,7 @@ npm run dev
 >Node Package requirements
 ```
 express				dotenv
-express-sessions	ejs
+express-sessions		ejs
 bcrypt				mysql2
 ```
 >Create .env file
