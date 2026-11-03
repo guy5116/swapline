@@ -41,14 +41,29 @@ async function sqlDTtojs(dates){
 		const i = date.start.getDay();
 		starts[i].push(date);
 	}
-	
-	console.log('Starts are:	',starts)
-	
+		
 	return starts;
+}
+
+async function fullScheduleView(){
+	const sql = `
+		SELECT employees.fname, employees.lname, schedule.start, schedule.end
+		FROM schedule INNER JOIN employees
+		ON employees.employee_id = schedule.employee_id;
+		`;
+
+	try {
+		const [rows] = await pool.execute(sql);
+		return rows.length > 0 ? sqlDTtojs(rows) : null;
+	} catch (error) {
+		console.log('error fetching data');
+		throw error;
+	}
 }
 
 module.exports = { 
 	findScheduleByEmployeeID,
 	pullSchedule,
-	sqlDTtojs
+	sqlDTtojs,
+	fullScheduleView
  };

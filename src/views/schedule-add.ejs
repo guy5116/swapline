@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+
+<h1>Add to Schedule</h1>
+
+<% if (error) { %>
+	<p class='error'><%=error %> </p>
+<% } %>
+
+<form actions='/schedule/edit/add' method='POST' class='card'>
+	<label for='employee'>Employee</label>
+	<select name='employee' id='employee'>
+		<%  employees.forEach(function(employee) { %>
+			<option value='<%=employee.employee_id%>'><%=employee.fname%> <%=employee.lname%></option>
+		<% }) %>
+	</select>
+
+	<label for='start'>Start Time: </label>
+	<input type='datetime-local' id='start' name='start'>
+
+	<label for='end'>End Time: </label>
+	<input type='datetime-local' id='end' name='end'>
+	
+	<button type='submit'>Add</button>
+</form>
+
+<%- include('partials/footer') %>
