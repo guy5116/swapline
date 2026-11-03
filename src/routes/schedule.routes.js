@@ -73,12 +73,14 @@ router.post('/schedule/edit/add', async(req,res,next) => {
 	try {
 		const { employee, start, end } = req.body
 		if(!employee || !start || !end) {
-			console.log('Fill out form',employee,start,end);
+			const employees = await pull_employees();
 			return res
 				.status(400)
 				.render('schedule-add',{
 					title: 'Add to Schedule',
-					error: 'Enter All required Fields'
+					error: 'Enter All required Fields',
+					user: req.session.user,
+					employees: employees
 				});
 		}
 
