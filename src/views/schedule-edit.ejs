@@ -3,10 +3,32 @@
 <h1>Schedule</h1>
 <p>Hi <strong><%= user.fname %> <%= user.lname %>. </strong></p>
 
+<% if (error) { %>
+	<p class='error'>Error: <%=error %> </p>
+<% } %>
+
+<form action='/schedule/edit/add' method='POST' class='card'>
+	<label for='employee'>Employee</label>
+	<select name='employee' id='employee'>
+		<%  employees.forEach(function(employee) { %>
+			<option value='<%=employee.employee_id%>'><%=employee.fname%> <%=employee.lname%></option>
+		<% }) %>
+	</select>
+
+	<label for='start'>Start Time: </label>
+	<input type='datetime-local' id='start' name='start'>
+
+	<label for='end'>End Time: </label>
+	<input type='datetime-local' id='end' name='end'>
+
+	<button type='submit'>Add</button>
+</form>
+
+
 <div class="flex-container">
   <% const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; %>
   <% let i = 0; %>
-
+  <% if(dates) { %>
   <% days.forEach(function(day) { %>
   	<div class="column"><%=day %>
   		<% if (dates[i]) { %>
@@ -15,6 +37,10 @@
   					<p>Employee: <%=date.fname %> <%=date.lname %></p>
 	  				<p>Starting at: <%=date.start %></p>
 	  				<p>Ending at: <%=date.start %></p>
+            <form action='/schedule/edit/delete' method='POST'>
+              <input type='hidden' name='id' value='<%=date.schedule_id%>'>
+              <button type='submit'>Delete</button>
+            </form>
   				</div>
   			<% }); %>
   		<% } else { %>
@@ -23,6 +49,9 @@
   		<% i = i + 1; %>
   	</div>
   <% }); %>
+  <% } else { %>
+    <p>NO DATES</p>
+  <% } %>
 </div>
 
 <%- include('partials/footer') %>

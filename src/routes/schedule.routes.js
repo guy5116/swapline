@@ -1,93 +1,154 @@
-const express = require('express');
-const session = require('express-session');
-const { findScheduleByEmployeeID, pullSchedule, sqlDTtojs, fullScheduleView } = require('../middleware/pull_schedule');
-const { pull_employees, add_schedule } = require('../middleware/pull_employees');
-const pool = require('../data/db');
+const express = require("express");
+const session = require("express-session");
+const {
+  findScheduleByEmployeeID,
+  pullSchedule,
+  findScheduleByID,
+  sqlDTtojs,
+  fullScheduleView,
+} = require("../middleware/pull_schedule");
+const {
+  pull_employees,
+  add_schedule,
+  delete_schedule,
+  update_schedule,
+} = require("../middleware/pull_employees");
+const pool = require("../data/db");
 const router = express.Router();
 
-router.get('/schedule', async(req,res,next) => {
-	if(!req.session.user) {
-			return res.redirect('/login');
-	}
-	//console.log(req.session.user);
-	try{
-		const user = req.session.user ?? null;
-		const dates = await findScheduleByEmployeeID(user.id);
+//View a Employees Weekly Schedule
+router.get("/schedule", async (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/login");
+  }
+  //console.log(req.session.user);
+  try {
+    const user = req.session.user ?? null;
+    const dates = await findScheduleByEmployeeID(user.id);
 
-		const order_schedule = await sqlDTtojs(dates)
-		
-		return res.render('schedule', { 
-						  title: 'Schedule',
-						  user: user, 
-						  dates: order_schedule, 
-						  error: null
-						  });
-	} catch (error) {
-		next(error);
-	}
+    const order_schedule = await sqlDTtojs(dates);
+
+    return res.render("schedule", {
+      title: "Schedule",
+      user: user,
+      dates: order_schedule,
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.get('/schedule/edit', async(req,res,next) => {
-	if(!req.session.user || !req.session.user.manager) {
-		return res.redirect('/schedule')
-	}
+//Allow a manager to see every employees schedule
+router.get("/schedule/edit", async (req, res, next) => {
+  if (!req.session.user || !req.session.user.manager) {
+    return res.redirect("/schedule");
+  }
 
-	try{
-		const user = req.session.user ?? null;
-		const schedule = await pullSchedule();
-		
-		const dates = await findScheduleByEmployeeID(user.id);
-		const ordered_dates = await fullScheduleView();
-		return res.render(
-			'schedule-edit', {
-				title: 'Schedule',
-				user: user,
-				dates:  ordered_dates,
-				error: null
-			}
-		)
-	} catch(error) {
-		next(error);
-	}
-	
-	
+  try {
+    const user = req.session.user ?? null;
+    const ordered_dates = await fullScheduleView();
+    const employees = await pull_employees();
+    return res.render("schedule-edit", {
+      title: "Schedule",
+      user: user,
+      dates: ordered_dates,
+      employees: employees,
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.get('/schedule/edit/add', async(req,res,next) => {
-	if(!req.session.user || !req.session.user.manager) {
-		console.log('NO AUTH');
-		return res.redirect('/schedule')
-	}
+//Allow a manager to add a schedule date to a specific user
+router.get("/schedule/edit/add", async (req, res, next) => {
+  if (!req.session.user || !req.session.user.manager) {
+    console.log("NO AUTH");
+    return res.redirect("/schedule");
+  }
 
-	const employees = await pull_employees();
-	
-	res.render('schedule-add',{
-		title : 'Add to Schedule',
-		error: null,
-		user: req.session.user,
-		employees : employees
-	});
-})
+  const employees = await pull_employees();
 
-router.post('/schedule/edit/add', async(req,res,next) => {
-	try {
-		const { employee, start, end } = req.body
-		if(!employee || !start || !end) {
-			const employees = await pull_employees();
-			return res
-				.status(400)
-				.render('schedule-add',{
-					title: 'Add to Schedule',
-					error: 'Enter All required Fields',
-					user: req.session.user,
-					employees: employees
-				});
-		}
+  res.render("schedule-add", {
+    title: "Add to Schedule",
+    error: null,
+    user: req.session.user,
+    employees: employees,
+  });
+});
+router.post("/schedule/edit/add", async (req, res, next) => {
+  try {
+    const { employee, start, end } = req.body;
+    if (!employee || !start || !end) {
+      const employees = await pull_employees();
+      return res.status(400).render("schedule-edit", {
+        title: "Add to Schedule",
+        error: "Enter All required Fields",
+        user: req.session.user,
+        employees: employees,
+      });
+    }
 
-		add_schedule(employee, start, end);
-	} catch (err) {
-		next(err);
-	}
-})
+    await add_schedule(employee, start, end);
+    res.redirect("/schedule/edit");
+  } catch (err) {
+    next(err);
+  }
+});
+
+//Allow a manager to delete a schedule date for an employee
+/*router.get("/schedule/edit/delete", async (req, res, next) => {
+  if (!req.session.user || !req.session.user.manager) {
+    console.log("AUTH REQUIRED!!!");
+    return res.redirect("/schedule");
+  }
+
+  const schedule = await fullScheduleView();
+
+  res.render("schedule-delete", {
+    title: "Delete a Schedule Entry",
+    error: null,
+    user: req.session.user,
+    dates: schedule,
+  });
+});
+*/
+
+router.post("/schedule/edit/delete", async (req, res, next) => {
+  console.log("Deleting in Progress...");
+  try {
+    const schedule_id = req.body;
+    await delete_schedule(schedule_id.id);
+    res.redirect("/schedule/edit"); //Find Better Fix Later :)
+  } catch (err) {
+    next(err);
+  }
+});
+
+//Allow a manager to update a scheduled date
+router.post("/schedule/edit/update", async (req, res, next) => {
+  if (!req.session.user || !req.session.user.manager) {
+    redirect("/login");
+    return;
+  }
+
+  try {
+    const { start, end, id } = req.body;
+    if (!start || !end || !id) {
+      const user = req.session.user ?? null;
+      const ordered_dates = await fullScheduleView();
+      return res.render("schedule-edit", {
+        title: "Schedule",
+        error: "Fillout all info",
+        user: user,
+        dates: ordered_dates,
+      });
+    }
+    await update_schedule(start, end, id);
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;

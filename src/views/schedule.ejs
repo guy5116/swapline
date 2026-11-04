@@ -7,6 +7,7 @@
   <% const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; %>
   <% let i = 0; %>
 
+  <% if(dates) { %>
   <% days.forEach(function(day) { %>
   	<div class="column"><%=day %>
   		<% if (dates[i]) { %>
@@ -22,6 +23,9 @@
   		<% i = i + 1; %>
   	</div>
   <% }); %>
+  <% } else {%>
+    <p>NO DATES</p>
+  <% } %>
 </div>
 
 <%- include('partials/footer') %>

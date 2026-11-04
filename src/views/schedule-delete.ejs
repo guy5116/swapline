@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+
+<h1>Schedule</h1>
+<p>Hi <strong><%= user.fname %> <%= user.lname %>. </strong></p>
+
+<div class="flex-container">
+  <% const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; %>
+  <% let i = 0; %>
+
+  <% days.forEach(function(day) { %>
+  	<div class="column"><%=day %>
+  		<% if (dates[i]) { %>
+  			<% dates[i].forEach(function (date) { %>
+  				<div style='background-color: gray'>
+  					<p>Employee: <%=date.fname %> <%=date.lname %></p>
+	  				<p>Starting at: <%=date.start %></p>
+	  				<p>Ending at: <%=date.start %></p>
+            <form action='/schedule/edit/delete' method='POST'>
+              <input type='hidden' name='id' value='<%=date.schedule_id%>'>
+              <button type='submit'>Delete</button>
+            </form>
+  				</div>
+  			<% }); %>
+  		<% } else { %>
+  			<p> No Dates </p>
+  		<% } %>
+  		<% i = i + 1; %>
+  	</div>
+  <% }); %>
+</div>
+
+<%- include('partials/footer') %>
+
+<style>
+.flex-container {
+  display: flex;
+  gap: 15px; /* Adds space between columns */
+}
+.column {
+  flex: 1; /* Distributes space equally among columns */
+  background-color: #f4f4f4;
+  padding: 10px;
+}
+</style>
