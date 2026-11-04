@@ -62,7 +62,7 @@ router.get("/schedule/edit", async (req, res, next) => {
 });
 
 //Allow a manager to add a schedule date to a specific user
-router.get("/schedule/edit/add", async (req, res, next) => {
+/*router.get("/schedule/edit/add", async (req, res, next) => {
   if (!req.session.user || !req.session.user.manager) {
     console.log("NO AUTH");
     return res.redirect("/schedule");
@@ -77,16 +77,19 @@ router.get("/schedule/edit/add", async (req, res, next) => {
     employees: employees,
   });
 });
+*/
 router.post("/schedule/edit/add", async (req, res, next) => {
   try {
     const { employee, start, end } = req.body;
     if (!employee || !start || !end) {
       const employees = await pull_employees();
+      const ordered_dates = await fullScheduleView();
       return res.status(400).render("schedule-edit", {
         title: "Add to Schedule",
         error: "Enter All required Fields",
         user: req.session.user,
         employees: employees,
+        dates: ordered_dates,
       });
     }
 
@@ -97,24 +100,7 @@ router.post("/schedule/edit/add", async (req, res, next) => {
   }
 });
 
-//Allow a manager to delete a schedule date for an employee
-/*router.get("/schedule/edit/delete", async (req, res, next) => {
-  if (!req.session.user || !req.session.user.manager) {
-    console.log("AUTH REQUIRED!!!");
-    return res.redirect("/schedule");
-  }
-
-  const schedule = await fullScheduleView();
-
-  res.render("schedule-delete", {
-    title: "Delete a Schedule Entry",
-    error: null,
-    user: req.session.user,
-    dates: schedule,
-  });
-});
-*/
-
+//Allow a manager to delete a schedule date
 router.post("/schedule/edit/delete", async (req, res, next) => {
   console.log("Deleting in Progress...");
   try {
