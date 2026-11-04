@@ -61,23 +61,7 @@ router.get("/schedule/edit", async (req, res, next) => {
   }
 });
 
-//Allow a manager to add a schedule date to a specific user
-/*router.get("/schedule/edit/add", async (req, res, next) => {
-  if (!req.session.user || !req.session.user.manager) {
-    console.log("NO AUTH");
-    return res.redirect("/schedule");
-  }
-
-  const employees = await pull_employees();
-
-  res.render("schedule-add", {
-    title: "Add to Schedule",
-    error: null,
-    user: req.session.user,
-    employees: employees,
-  });
-});
-*/
+//Allow a manger to add a date to the schedule
 router.post("/schedule/edit/add", async (req, res, next) => {
   try {
     const { employee, start, end } = req.body;
