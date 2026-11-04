@@ -1,36 +1,47 @@
-const express = require('express');
-const { pull_employees, add_schedule } = require('../middleware/pull_employees');
-const router = express.Router();
+const pool = require("../data/db");
 
-router.get('/schedule/edit/add', async(req,res,next) => {
-	if(!req.session.user || req.session.user.manager) {
-		return res.redirect('/schedule')
-	}
+async function add_schedule(id, start, end) {
+  const sql = "INSERT INTO schedule (start, end, employee_id) VALUES (?,?,?)";
+  try {
+    await pool.query(sql, [start, end, id]);
+    console.log("Schedule Added");
+  } catch (error) {
+    console.log("error adding to schedule");
+    throw error;
+  }
+}
 
-	const employees = await pull_employees();
-	
-	res.render('schedule-add',{
-		title : 'Add to Schedule',
-		error: null,
-		user: req.session.user,
-		employees : employees
-	});
-})
+//Delete a row in the schedule table
+async function delete_schedule(id) {
+  const sql = "DELETE FROM schedule WHERE schedule_id = ?";
 
-router.post('/schedule/add', async(req,res,next) => {
-	try {
-		const { employee_id, start, end } = req.body
-		if(!employee_id || !start || !end) {
-			return res
-				.status(400)
-				.render('schedule-add',{
-					title: 'Add to Schedule',
-					error: 'Enter All required Fields'
-				});
-		}
+  try {
+    console.log("Deleting: ", id);
+    await pool.query(sql, [id]);
+    console.log("Row deleted!");
+  } catch (error) {
+    console.log("Error deleting selected id");
+    throw error;
+  }
+}
 
-		add_schedule(employee_id, start, end);
-	} catch (err) {
-		next(err);
-	}
-})
+//Update a row in the schedule table
+async function update_schedule(id, start, end, s_id) {
+  const sql = `
+    UPDATE schedule
+    SET start = ?, end = ?, employee_id = ?
+    WHERE schedule_id = ?;
+    `;
+  try {
+    const [results] = await pool.query(sql, [start, end, id, s_id]);
+    console.log("Update results: ", results);
+  } catch (error) {
+    console.log("There was an error updating schedule table", error);
+  }
+}
+
+module.exports = {
+  add_schedule,
+  delete_schedule,
+  update_schedule,
+};

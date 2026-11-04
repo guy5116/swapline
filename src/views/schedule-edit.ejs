@@ -41,6 +41,30 @@
               <input type='hidden' name='id' value='<%=date.schedule_id%>'>
               <button type='submit'>Delete</button>
             </form>
+			<button class='edit' value='<%=date.schedule_id%>'> Edit </button>
+			<dialog id='<%=date.schedule_id%>'>
+				<h2>Edit Date</h2>
+				<form action='/schedule/edit/update' method='POST'>
+
+					<label for='employee_edit'>Employee</label>
+					<select name='employee_edit' id='employee_edit'>
+						<%  employees.forEach(function(employee) { %>
+							<option value='<%=employee.employee_id%>'><%=employee.fname%> <%=employee.lname%></option>
+						<% }) %>
+					</select>
+
+					<label for='start_edit'>Start Time:</label>
+					<input type='datetime-local' id='start_edit' name='start_edit' value='<%=date.start%>'>
+					<label for='end_edit'>End Time:</label>
+					<input type='datetime-local' id='end_edit' name='end_edit' value='<%=date.end%>'>
+					<button type='submit'>Submit</button>
+					<input type='hidden' name='schedule_edit' value='<%=date.schedule_id%>'>
+				</form>
+				<form method='dialog'>
+					<button>Close</button>
+				</form>
+			</dialog>
+
   				</div>
   			<% }); %>
   		<% } else { %>
@@ -53,6 +77,19 @@
     <p>NO DATES</p>
   <% } %>
 </div>
+
+<script>
+	const edit_btns = document.querySelectorAll('.edit');
+
+	edit_btns.forEach(button => {
+			button.addEventListener('click', (event) => {
+					const id = event.target.value;
+					const modal = document.getElementById(id)
+					modal.showModal();
+				})
+		})
+
+</script>
 
 <%- include('partials/footer') %>
 

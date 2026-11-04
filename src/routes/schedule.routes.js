@@ -1,20 +1,23 @@
 const express = require("express");
 const session = require("express-session");
+const pool = require("../data/db");
+const router = express.Router();
+//Access schedule table functions
 const {
   findScheduleByEmployeeID,
-  pullSchedule,
-  findScheduleByID,
   sqlDTtojs,
   fullScheduleView,
 } = require("../middleware/pull_schedule");
+
+//Edit schedule table
 const {
-  pull_employees,
   add_schedule,
   delete_schedule,
   update_schedule,
-} = require("../middleware/pull_employees");
-const pool = require("../data/db");
-const router = express.Router();
+} = require("../middleware/schedule_editor");
+
+//Access employee database
+const { pull_employees } = require("../middleware/pull_employees");
 
 //View a Employees Weekly Schedule
 router.get("/schedule", async (req, res, next) => {
@@ -104,18 +107,32 @@ router.post("/schedule/edit/update", async (req, res, next) => {
   }
 
   try {
-    const { start, end, id } = req.body;
-    if (!start || !end || !id) {
+    const { start_edit, end_edit, employee_edit, schedule_edit } = req.body;
+    console.log("ID: ", schedule_edit);
+    if (!start_edit || !end_edit || !employee_edit || !schedule_edit) {
+      console.log(schedule_edit);
       const user = req.session.user ?? null;
       const ordered_dates = await fullScheduleView();
+      const employees = await pull_employees();
       return res.render("schedule-edit", {
         title: "Schedule",
         error: "Fillout all info",
         user: user,
         dates: ordered_dates,
+        employees: employees,
       });
     }
-    await update_schedule(start, end, id);
+    await update_schedule(employee_edit, start_edit, end_edit, schedule_edit);
+    const user = req.session.user ?? null;
+    const ordered_dates = await fullScheduleView();
+    const employees = await pull_employees();
+    return res.render("schedule-edit", {
+      title: "Schedule",
+      error: null,
+      user: user,
+      dates: ordered_dates,
+      employees: employees,
+    });
   } catch (err) {
     next(err);
   }

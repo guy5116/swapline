@@ -1,17 +1,17 @@
-const mysql = require('mysql2/promise');
+const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-	host: 'localhost',
-	user: 'andrew',
-	password: 'password',
-	database: 'swapline',
-	waitForConnection: true,
-	connectionLimit: 10,
-	queueLimit: 0
+  host: "localhost",
+  user: "andrew",
+  password: "password",
+  database: "swapline",
+  waitForConnection: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 async function createEmployeesTable() {
-	const sql = `
+  const sql = `
 		CREATE TABLE IF NOT EXISTS employees (
 			employee_id INT AUTO_INCREMENT PRIMARY KEY,
 			fname VARCHAR(100) NOT NULL,
@@ -22,16 +22,16 @@ async function createEmployeesTable() {
 			);
 		`;
 
-		try {
-			const[result] = await pool.query(sql);
-			console.log('Employees table successfully verified/created: ', result);
-		} catch (error) {
-			console.log('Error creating employees table: ', error)
-		}
+  try {
+    const [result] = await pool.query(sql);
+    //console.log('Employees table successfully verified/created: ', result);
+  } catch (error) {
+    console.log("Error creating employees table: ", error);
+  }
 }
 
 async function createScheduleTable() {
-	const sql = `
+  const sql = `
 		CREATE TABLE IF NOT EXISTS schedule (
 			schedule_id INT AUTO_INCREMENT PRIMARY KEY,
 			start DATETIME,
@@ -43,12 +43,12 @@ async function createScheduleTable() {
 			);
 		`;
 
-		try {
-			const[result] = await pool.query(sql);
-			console.log('Schedule table successfully verified/created: ', result);
-		} catch (error) {
-			console.log('Error creating schedule table: ', error)
-		}
+  try {
+    const [result] = await pool.query(sql);
+    //console.log('Schedule table successfully verified/created: ', result);
+  } catch (error) {
+    console.log("Error creating schedule table: ", error);
+  }
 }
 
 createEmployeesTable();

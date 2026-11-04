@@ -1,29 +1,32 @@
 Basic Startup:
 
->Make the mySQL Database
+> Make the mySQL Database
+
 ```
 CREATE DATABASE swapline;
 ```
 
->Create .env file
+> Create .env file
+
 ```
 PORT=YOUR PORT
 SESSION_SERCRET=ENTER YOUR SECRET
 ```
 
->shell
+> shell
+
 ```
-npm install express express-session ejs bcryptjs dotenv mysql2   
+npm install express express-session ejs bcryptjs dotenv mysql2
 npm run dev
 ```
 
->Node Package requirements
+> Node Package requirements
+
 ```
 express				dotenv
 express-sessions		ejs
 bcrypt				mysql2
 ```
-
 
 Swap Line is a scheduling platform with the goals of
 
@@ -33,6 +36,6 @@ Swap Line is a scheduling platform with the goals of
 
 -Allowing **Managers** to access all employees schedules (Logic Done)
 
--Allowing **Managers** to add, delete, and update schedules (Updating remains)
+-Allowing **Managers** to add, delete, and update schedules (Logic Done)
 
 -Allowing **Managers** to approve a swap between two employees (Not Started)
