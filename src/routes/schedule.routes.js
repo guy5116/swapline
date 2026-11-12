@@ -1,6 +1,8 @@
 const express = require("express");
 const session = require("express-session");
 const pool = require("../data/db");
+const { requireAuth, requireManager } = require("../middleware/requireAuth.js");
+console.log("Loaded middleware:", require("../middleware/requireAuth.js"));
 const router = express.Router();
 //Access schedule table functions
 const {
@@ -20,10 +22,7 @@ const {
 const { pull_employees } = require("../middleware/pull_employees");
 
 //View a Employees Weekly Schedule
-router.get("/schedule", async (req, res, next) => {
-  if (!req.session.user) {
-    return res.redirect("/login");
-  }
+router.get("/schedule", requireAuth, async (req, res, next) => {
   //console.log(req.session.user);
   try {
     const user = req.session.user ?? null;
@@ -43,11 +42,7 @@ router.get("/schedule", async (req, res, next) => {
 });
 
 //Allow a manager to see every employees schedule
-router.get("/schedule/edit", async (req, res, next) => {
-  if (!req.session.user || !req.session.user.manager) {
-    return res.redirect("/schedule");
-  }
-
+router.get("/schedule/edit", requireManager, async (req, res, next) => {
   try {
     const user = req.session.user ?? null;
     const ordered_dates = await fullScheduleView();
@@ -65,7 +60,7 @@ router.get("/schedule/edit", async (req, res, next) => {
 });
 
 //Allow a manger to add a date to the schedule
-router.post("/schedule/edit/add", async (req, res, next) => {
+router.post("/schedule/edit/add", requireManager, async (req, res, next) => {
   try {
     const { employee, start, end } = req.body;
     if (!employee || !start || !end) {
@@ -88,7 +83,7 @@ router.post("/schedule/edit/add", async (req, res, next) => {
 });
 
 //Allow a manager to delete a schedule date
-router.post("/schedule/edit/delete", async (req, res, next) => {
+router.post("/schedule/edit/delete", requireManager, async (req, res, next) => {
   console.log("Deleting in Progress...");
   try {
     const schedule_id = req.body;
@@ -100,12 +95,7 @@ router.post("/schedule/edit/delete", async (req, res, next) => {
 });
 
 //Allow a manager to update a scheduled date
-router.post("/schedule/edit/update", async (req, res, next) => {
-  if (!req.session.user || !req.session.user.manager) {
-    redirect("/login");
-    return;
-  }
-
+router.post("/schedule/edit/update", requireManager, async (req, res, next) => {
   try {
     const { start_edit, end_edit, employee_edit, schedule_edit } = req.body;
     console.log("ID: ", schedule_edit);

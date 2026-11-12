@@ -1,10 +1,469 @@
-.flex-container {
-  display: flex;
-  gap: 15px;
+/* ==========================================================================
+   Swap Line – site stylesheet
+   Plain CSS, no frameworks. Green accent, light surface, system fonts.
+   ========================================================================== */
+
+:root {
+  --bg: #f3f6f4;
+  --surface: #ffffff;
+  --text: #1f2a24;
+  --muted: #5f6f66;
+  --border: #d9e2dc;
+
+  --accent: #1f7a4d;
+  --accent-hover: #185f3c;
+  --accent-soft: #e4f3ea;
+  --accent-border: #bfe0cd;
+
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --danger-border: #f2b8b1;
+
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 32, 24, 0.05), 0 4px 14px rgba(16, 32, 24, 0.06);
+  --shadow-lg: 0 10px 40px rgba(16, 32, 24, 0.25);
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
+          "Helvetica Neue", sans-serif;
+  --content-width: 1200px;
 }
 
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 1.85rem; }
+h2 { font-size: 1.3rem; }
+
+p { margin: 0 0 1rem; }
+
+a { color: var(--accent); }
+a:hover { color: var(--accent-hover); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation
+   -------------------------------------------------------------------------- */
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  /* keeps the nav contents lined up with <main> at wide widths */
+  padding: 10px max(16px, calc((100% - var(--content-width)) / 2 + 16px));
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(16, 32, 24, 0.04);
+}
+
+/* brand mark – pure CSS so the header markup stays untouched */
+nav::before {
+  content: "Swap Line";
+  margin-right: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+}
+
+nav a {
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: var(--text);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+nav a:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* the logout form – push it to the far right */
+nav .inline {
+  display: inline;
+  margin-left: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Page body
+   -------------------------------------------------------------------------- */
+
+main {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 36px 16px 64px;
+}
+
+main > p {
+  max-width: 60ch;
+  color: var(--muted);
+}
+
+main > p strong {
+  color: var(--text);
+}
+
+.error {
+  max-width: 440px;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--danger-border);
+  border-radius: 8px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+button {
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+button:hover {
+  background: var(--accent-hover);
+}
+
+nav button {
+  padding: 6px 12px;
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+}
+
+nav button:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+
+label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 440px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.card label {
+  margin-top: 10px;
+}
+
+.card label:first-child {
+  margin-top: 0;
+}
+
+.card button {
+  width: 100%;
+  margin-top: 18px;
+}
+
+/* On wide screens the "add shift" form (the only card with date pickers)
+   becomes a single row above the week grid. */
+@media (min-width: 900px) {
+  .card:has(input[type="datetime-local"]) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    max-width: none;
+    padding: 18px 22px;
+  }
+
+  .card:has(input[type="datetime-local"]) label {
+    margin-top: 0;
+  }
+
+  .card:has(input[type="datetime-local"]) input,
+  .card:has(input[type="datetime-local"]) select {
+    flex: 1 1 170px;
+    width: auto;
+  }
+
+  .card:has(input[type="datetime-local"]) button {
+    width: auto;
+    margin: 0 0 0 auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Weekly schedule grid
+   -------------------------------------------------------------------------- */
+
+.flex-container {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.flex-container > p {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* The day name is a bare text node inside .column, so the "heading" look
+   is set on the column itself and then reset for every child. */
 .column {
-  flex: 1;
-  background-color: #f4f4f4;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.column > * {
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+}
+
+/* "No Dates" placeholder */
+.column > p {
+  margin: 0;
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+}
+
+/* A single shift */
+.shift {
   padding: 10px;
+  border: 1px solid var(--accent-border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent-soft);
+  overflow-wrap: anywhere;
+}
+
+.shift p {
+  margin: 0 0 3px;
+}
+
+/* Delete form + Edit button sit side by side under the shift details */
+.shift > form,
+.shift > .edit {
+  display: inline-block;
+  margin: 8px 4px 0 0;
+  vertical-align: middle;
+}
+
+.shift > form button,
+.shift > .edit {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.shift > form button {
+  border-color: var(--danger-border);
+  background: var(--surface);
+  color: var(--danger);
+}
+
+.shift > form button:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.shift > .edit {
+  border-color: var(--accent-border);
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.shift > .edit:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Edit dialog
+   -------------------------------------------------------------------------- */
+
+dialog {
+  width: min(440px, calc(100vw - 32px));
+  padding: 28px;
+  border: none;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  box-shadow: var(--shadow-lg);
+}
+
+dialog::backdrop {
+  background: rgba(16, 32, 24, 0.45);
+}
+
+dialog h2 {
+  margin-bottom: 14px;
+}
+
+dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+dialog form label {
+  margin-top: 10px;
+}
+
+dialog form label:first-child {
+  margin-top: 0;
+}
+
+dialog form button {
+  width: 100%;
+  margin-top: 18px;
+}
+
+/* the "Close" form */
+dialog form[method="dialog"] {
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+dialog form[method="dialog"] button {
+  width: auto;
+  margin-top: 0;
+  border-color: var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+dialog form[method="dialog"] button:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* fewer day columns per row as the viewport narrows */
+@media (max-width: 1100px) {
+  .flex-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .flex-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 440px) {
+  .flex-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Small screens
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  main {
+    padding: 24px 16px 48px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 20px;
+  }
 }

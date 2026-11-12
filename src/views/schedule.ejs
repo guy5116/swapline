@@ -12,7 +12,7 @@
   	<div class="column"><%=day %>
   		<% if (dates[i]) { %>
   			<% dates[i].forEach(function (date) { %>
-  				<div style='background-color: gray'>
+  				<div class='shift'>
 	  				<p>Starting at: <%=date.start %></p>
 	  				<p>Ending at: <%=date.start %></p>
   				</div>
@@ -29,15 +29,3 @@
 </div>
 
 <%- include('partials/footer') %>
-
-<style>
-.flex-container {
-  display: flex;
-  gap: 15px; /* Adds space between columns */
-}
-.column {
-  flex: 1; /* Distributes space equally among columns */
-  background-color: #f4f4f4;
-  padding: 10px;
-}
-</style>
